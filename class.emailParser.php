@@ -199,14 +199,15 @@ class Email {
       foreach($parsedBody as $bodyArray) {
         if(in_array('Content-Type: text/html; charset=ISO-8859-1', $bodyArray)) {
           foreach($bodyArray as $key => $arrElem) {
-            if(strlen($arrElem) == 0) {
+            $pattern = '/^\b(Content[-\w]+)\b[:]/';
+            if(strlen($arrElem) == 0 || preg_match($pattern, $arrElem)) {
               unset($bodyArray[$key]);
             }
           }
-          //return $bodyArray;
+          return implode($bodyArray);
         }  
       }
-      return $parsedBody;
+      return "";
     }
 
     public function getPlainBody($boundry, $bodyContent) {
@@ -216,14 +217,16 @@ class Email {
       foreach($parsedBody as $bodyArray) {
         if(in_array('Content-Type: text/plain; charset=ISO-8859-1; Format=Flowed', $bodyArray)) {
           foreach($bodyArray as $key => $arrElem) {
-            if(strlen($arrElem) == 0) {
+           $pattern = '/^\b(Content[-\w]+)\b[:]/';
+            if(strlen($arrElem) == 0 || preg_match($pattern, $arrElem)) {
               unset($bodyArray[$key]);
-            } 
+            }
+ 
           }
-          return $bodyArray;
+          return implode($bodyArray);
         }  
       }
-      return $parsedBody;
+      return "";
     }
 
     /**
